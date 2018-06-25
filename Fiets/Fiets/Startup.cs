@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Fiets.Data;
 using Fiets.Models;
 using Fiets.Services;
+using SignalRChat.Hubs;
 
 namespace Fiets
 {
@@ -37,6 +38,8 @@ namespace Fiets
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,12 +59,17 @@ namespace Fiets
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
+                
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chathub");
             });
         }
     }
