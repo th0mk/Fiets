@@ -13,6 +13,7 @@ using Fiets.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Fiets.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Fiets
 {
@@ -44,6 +45,8 @@ namespace Fiets
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSignalR();
+
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

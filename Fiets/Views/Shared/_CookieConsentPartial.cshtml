@@ -8,34 +8,39 @@
 
 @if (showBanner)
 {
-    <nav id="cookieConsent" class="navbar navbar-default navbar-fixed-top" role="alert">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse">
-                    <span class="sr-only">Toggle cookie consent banner</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></span>
-            </div>
-            <div class="collapse navbar-collapse">
-                <p class="navbar-text">
-                    Use this space to summarize your privacy and cookie use policy.
-                </p>
-                <div class="navbar-right">
-                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-info navbar-btn">Learn More</a>
-                    <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">Accept</button>
-                </div>
-            </div>
+    <div id="cookieConsent" class="alert alert-dismissible text-center cookiealert" role="alert">
+        <div class="cookiealert-container">
+            We use cookies to track every single move you make.
+            <a asp-controller="Home" asp-action="Privacy" class="">Learn more</a>
+            <button type="button" class="btn btn-primary navbar-btn acceptcookies col-1" data-cookie-string="@cookieString" aria-label="Close">Accept</button>
         </div>
-    </nav>
+    </div>
+
     <script>
         (function () {
             document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
                 document.cookie = el.target.dataset.cookieString;
-                document.querySelector("#cookieConsent").classList.add("hidden");
+                document.querySelector("#cookieConsent").classList.add("d-none");
             }, false);
         })();
     </script>
+    <style>
+        .cookiealert {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            margin: 0 !important;
+            z-index: 999;
+            border-radius: 0;
+            background: #212327 url("images/cubes.png");
+            transition: all 500ms ease-out;
+            color: #ecf0f1;
+        }
+
+        .cookiealert .btn {
+            margin-left: 10px;
+            vertical-align: baseline;
+        }
+    </style>
 }

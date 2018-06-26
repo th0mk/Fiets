@@ -7,9 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20180626173459_initial.cs" />
+    <Compile Remove="Data\Migrations\20180626173459_initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180626173806_intial.cs" />
+    <Compile Remove="Data\Migrations\20180626173806_intial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
 </Project>

@@ -1,19 +1,40 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    @using System.Security.Claims;
 }
 
-<div class="container">
-    <input type="text" id="message" />
-    <input type="button" id="sendmessage" value="Send" />
-    <ul id="discussion"></ul>
+<div class="container-fluid row">
+    <div class="col-7 card">
+        <div class="card-body">
+            <h2 class="card-title">Leaderboard</h2>
+        </div>
+    </div>
+    <div class="col-4 offset-1 card">
+        <div class="card-body">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <h2 class="card-title">Track your ride</h2>
+                <div class="input-group">
+                    <input type="text" id="message" />
+                    <div class="input-group-append">
+                        <input type="button" id="sendmessage" value="Send" class="btn btn-outline-primary" />
+                    </div>
+                </div>
+                <ul id="discussion"></ul>
+            }
+            else
+            {
+                <h2 class="card-title">Log in to track your rides</h2>
+
+            }
+        </div>
+    </div>
 </div>
 
 @section Scripts{
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
             var messageInput = document.getElementById('message');
-            // Get the user name and store it to prepend to messages.
-            var name = prompt('Enter your name:', '');
             // Set initial focus to message input box.
             messageInput.focus();
             // Start the connection.
@@ -21,13 +42,23 @@
                 .withUrl('/chat')
                 .build();
             // Create a function that the hub can call to broadcast messages.
-            connection.on('broadcastMessage', function (name, message) {
+            connection.on('addRide', function (id, name, rideStartKm, utcStart) {
                 // Html encode display name and message.
                 var encodedName = name;
-                var encodedMsg = message;
+                var encodedMsg = utcStart;
                 // Add the message to the page.
                 var liElement = document.createElement('li');
-                liElement.innerHTML = '<strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
+                liElement.innerHTML = '<strong> Start' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
+                document.getElementById('discussion').appendChild(liElement);
+            });
+            // Create a function that the hub can call to broadcast messages.
+            connection.on('removeRide', function (id, name, rideEndKm, utcEnd) {
+                // Html encode display name and message.
+                var encodedName = name;
+                var encodedMsg = utcEnd;
+                // Add the message to the page.
+                var liElement = document.createElement('li');
+                liElement.innerHTML = '<strong> End' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
                 document.getElementById('discussion').appendChild(liElement);
             });
             // Transport fallback functionality is now built into start.
@@ -36,7 +67,7 @@
                     console.log('connection started');
                     document.getElementById('sendmessage').addEventListener('click', function (event) {
                         // Call the Send method on the hub.
-                        connection.invoke('send', name, messageInput.value);
+                        connection.invoke('StartRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', messageInput.value);
                         // Clear text box and reset focus for next comment.
                         messageInput.value = '';
                         messageInput.focus();

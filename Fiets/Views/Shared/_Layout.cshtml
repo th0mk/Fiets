@@ -18,14 +18,16 @@
     </environment>
 </head>
 <body>
-    
+
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
+    <div class="container-fluid body-content">
         @RenderBody()
-       
     </div>
+
+    <partial name="_LoginPartial" />
+
 
     <environment include="Development">
         <script src="~/lib/jquery/jquery.slim.js"></script>
