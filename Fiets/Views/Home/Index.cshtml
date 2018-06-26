@@ -3,30 +3,35 @@
     @using System.Security.Claims;
 }
 
-<div class="container-fluid row">
-    <div class="col-7 card">
-        <div class="card-body">
-            <h2 class="card-title">Leaderboard</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-6 card">
+            <div class="card-body">
+                <h2 class="card-title">Leaderboard</h2>
+            </div>
         </div>
-    </div>
-    <div class="col-4 offset-1 card">
-        <div class="card-body">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <h2 class="card-title">Track your ride</h2>
-                <div class="input-group">
-                    <input type="text" id="message" />
-                    <div class="input-group-append">
-                        <input type="button" id="sendmessage" value="Send" class="btn btn-outline-primary" />
+        <div class="col-5 offset-1 card">
+            <div class="card-body">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <h4 class="card-title">Track your ride</h4>
+                    <div class="input-group">
+                        <input type="number" id="message" />
+                        <div class="input-group-append">
+                            <input type="button" id="sendmessage" value="Send" class="btn btn-outline-primary" />
+                        </div>
                     </div>
-                </div>
-                <ul id="discussion"></ul>
-            }
-            else
-            {
-                <h2 class="card-title">Log in to track your rides</h2>
 
-            }
+                }
+                else
+                {
+                    <h4 class="card-title">Log in to track your rides</h4>
+                }
+                <br />
+                <h4 class="card-title">Huidige ritjes</h4>
+
+                <ul id="discussion" class="list-group"></ul>
+            </div>
         </div>
     </div>
 </div>
@@ -48,7 +53,8 @@
                 var encodedMsg = utcStart;
                 // Add the message to the page.
                 var liElement = document.createElement('li');
-                liElement.innerHTML = '<strong> Start' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
+                liElement.className = "list-group-item";
+                liElement.innerHTML = '<strong> Start ' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
                 document.getElementById('discussion').appendChild(liElement);
             });
             // Create a function that the hub can call to broadcast messages.

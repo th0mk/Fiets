@@ -18,18 +18,6 @@ namespace Fiets.Controllers
             return View();
         }
 
-        public async Task<IActionResult> StartRideAsync(int? rideStartKm)
-        {
-            var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            Ride ride = new Ride
-            {
-                RideStartTimeUtc = DateTime.UtcNow,
-                RideStartKm = rideStartKm.Value,
-            };
-
-            return View();
-        }
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
