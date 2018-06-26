@@ -33,8 +33,8 @@ var deps = {
     "popper.js": {
         "dist/**/*": ""
     },
-    "signalr": {
-        "*": ""
+    "@aspnet": {
+        "signalr/dist/**/*": ""
     }
 };
 
