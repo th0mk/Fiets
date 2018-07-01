@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     ViewData["Title"] = "Home Page";
     @using System.Security.Claims;
 }
@@ -29,8 +30,14 @@
                 }
                 <br />
                 <h4 class="card-title">Huidige ritjes</h4>
-
-                <ul id="discussion" class="list-group"></ul>
+                
+                
+                <ul id="discussion" class="list-group">
+                    @foreach (var item in Model.CurrentRides)
+                    {
+                        <li><strong>@item.User</strong> @item.RideStartKm</li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
