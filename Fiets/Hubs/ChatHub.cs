@@ -1,6 +1,7 @@
 ﻿using Fiets.Data;
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Fiets.Hubs
@@ -38,6 +39,24 @@ namespace Fiets.Hubs
             };
 
             db.Rides.Add(ride);
+
+            db.SaveChanges();
+        }
+
+
+        public void EndRide(string id, string rideEndKm)
+        {
+            DateTime utcNow = DateTime.UtcNow;
+
+            Clients.All.SendAsync("removeRide", id, "Jan", rideEndKm, utcNow);
+
+            var ride = db.Rides.FirstOrDefault(f => f.UserID == id && !f.RideFinished);
+
+            ride.RideFinished = true;
+            ride.RideEndKm = Int32.Parse(rideEndKm);
+            ride.RideEndTimeUtc = utcNow;
+
+            db.Entry(ride).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
 
             db.SaveChanges();
         }

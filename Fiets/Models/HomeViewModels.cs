@@ -10,6 +10,10 @@ namespace Fiets.ViewModels
 {
     public class IndexViewModel
     {
+        public bool Riding { get; set; }
+
+        public int? RideID { get; set; }
+
         public List<RideListItem> CurrentRides { get; set; }
 
         public List<RideListItem> TopRides { get; set; }

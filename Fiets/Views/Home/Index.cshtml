@@ -15,13 +15,29 @@
             <div class="card-body">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <h4 class="card-title">Track your ride</h4>
-                    <div class="input-group">
-                        <input type="number" id="message" />
-                        <div class="input-group-append">
-                            <input type="button" id="sendmessage" value="Send" class="btn btn-outline-primary" />
+                    <div id="startRide" class="@if (Model.Riding) {<text>d-none</text>}">
+                        <h4 class="card-title">Track your ride</h4>
+                        <p>Starting KM:</p>
+
+                        <div class="input-group">
+                            <input type="number" id="startkm" />
+                            <div class="input-group-append">
+                                <input type="button" id="startride" value="Send" class="btn btn-outline-primary" />
+                            </div>
                         </div>
                     </div>
+
+                    <div id="endRide" class="@if (!Model.Riding) {<text>d-none</text>}">
+                        <h4 class="card-title">End your ride</h4>
+                        <p>End KM:</p>
+                        <div class="input-group">
+                            <input type="number" id="endkm" />
+                            <div class="input-group-append">
+                                <input type="button" id="endride" value="Send" class="btn btn-outline-primary" />
+                            </div>
+                        </div>
+                    </div>
+
 
                 }
                 else
@@ -30,8 +46,8 @@
                 }
                 <br />
                 <h4 class="card-title">Huidige ritjes</h4>
-                
-                
+
+
                 <ul id="discussion" class="list-group">
                     @foreach (var item in Model.CurrentRides)
                     {
@@ -46,9 +62,16 @@
 @section Scripts{
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
-            var messageInput = document.getElementById('message');
+            var startInput = document.getElementById('startkm');
+            var endInput = document.getElementById('endkm');
             // Set initial focus to message input box.
-            messageInput.focus();
+            @if (Model.Riding){
+                <text>startInput.focus();</text>
+            }
+            else
+            {
+                <text>endInput.focus();</text>
+            }
             // Start the connection.
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl('/chat')
@@ -60,7 +83,7 @@
                 var encodedMsg = utcStart;
                 // Add the message to the page.
                 var liElement = document.createElement('li');
-                liElement.className = "list-group-item";
+                liElement.className = "list-group-item " + id;
                 liElement.innerHTML = '<strong> Start ' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg;
                 document.getElementById('discussion').appendChild(liElement);
             });
@@ -78,12 +101,18 @@
             connection.start()
                 .then(function () {
                     console.log('connection started');
-                    document.getElementById('sendmessage').addEventListener('click', function (event) {
-                        // Call the Send method on the hub.
-                        connection.invoke('StartRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', messageInput.value);
-                        // Clear text box and reset focus for next comment.
-                        messageInput.value = '';
-                        messageInput.focus();
+                    document.getElementById('startride').addEventListener('click', function (event) {
+                        connection.invoke('StartRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', startInput.value);
+                        $('#endRide').removeClass('d-none');
+                        $('#startRide').addClass('d-none');
+                        endInput.focus();
+                        event.preventDefault();
+                    });
+                    document.getElementById('endride').addEventListener('click', function (event) {
+                        connection.invoke('EndRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', endInput.value);
+                        $('#endRide').addClass('d-none');
+                        $('#startRide').removeClass('d-none');
+                        startInput.focus();
                         event.preventDefault();
                     });
                 })

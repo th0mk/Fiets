@@ -49,11 +49,25 @@ namespace Fiets.Controllers
                 }).ToList();
 
 
+
             var viewmodel = new IndexViewModel
             {
                 CurrentRides = currentRides,
-                LastRides = lastRides
+                LastRides = lastRides,
+                Riding = false,
             };
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentRide = db.Rides.FirstOrDefault(f => f.UserID == User.FindFirstValue(ClaimTypes.NameIdentifier) && !f.RideFinished);
+                if (currentRide != null)
+                {
+                    viewmodel.RideID = currentRide.RideID;
+                    viewmodel.Riding = true;
+                }
+            }
+
+
 
             return View(viewmodel);
         }
