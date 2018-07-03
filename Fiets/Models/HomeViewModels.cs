@@ -14,28 +14,34 @@ namespace Fiets.ViewModels
 
         public int? RideID { get; set; }
 
-        public List<RideListItem> CurrentRides { get; set; }
+        public List<CurrentRideListItem> CurrentRides { get; set; }
 
-        public List<RideListItem> TopRides { get; set; }
+        public List<FinishedRideListItem> TopRides { get; set; }
 
-        public List<RideListItem> LastRides { get; set; }
+        public List<FinishedRideListItem> LastRides { get; set; }
     }
 
-    public class RideListItem
+    public class CurrentRideListItem
     {
         [Key]
         public int RideID { get; set; }
 
         public string User { get; set; }
 
-        public bool RideFinished { get; set; }
-
         public DateTime RideStartTimeUtc { get; set; }
 
         public int RideStartKm { get; set; }
+    }
 
-        public int? RideEndKm { get; set; }
+    public class FinishedRideListItem
+    {
+        [Key]
+        public int RideID { get; set; }
 
-        public DateTime? RideEndTimeUtc { get; set; }
+        public string User { get; set; }
+
+        public int KMDriven { get; set; }
+
+        public string TimeDriven { get; set; }
     }
 }

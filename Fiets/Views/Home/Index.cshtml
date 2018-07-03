@@ -9,6 +9,16 @@
         <div class="col-6 card">
             <div class="card-body">
                 <h2 class="card-title">Leaderboard</h2>
+                @if (Model.TopRides != null)
+                {
+                    foreach (var ride in Model.TopRides)
+                    {
+                        <p>@ride.User</p>
+                        <p>@ride.KMDriven</p>
+                        <p>@ride.TimeDriven</p>
+
+                    }
+                }
             </div>
         </div>
         <div class="col-5 offset-1 card">

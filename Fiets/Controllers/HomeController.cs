@@ -25,11 +25,10 @@ namespace Fiets.Controllers
         {
             var currentRides = db.Rides
                 .Where(w => !w.RideFinished)
-                .Select(s => new RideListItem
+                .Select(s => new CurrentRideListItem
                 {
                     RideID = s.RideID,
                     RideStartKm = s.RideStartKm,
-                    RideFinished = s.RideFinished,
                     User = db.Users.FirstOrDefault(f => f.Id == s.UserID).UserName
                 }).ToList();
 
@@ -37,21 +36,29 @@ namespace Fiets.Controllers
                 .Where(w => w.RideFinished)
                 .OrderBy(o => o.RideEndTimeUtc)
                 .Take(5)
-                .Select(s => new RideListItem
+                .Select(s => new FinishedRideListItem
                 {
                     RideID = s.RideID,
-                    RideEndKm = s.RideEndKm,
-                    RideEndTimeUtc = s.RideEndTimeUtc,
-                    RideStartKm = s.RideStartKm,
-                    RideStartTimeUtc = s.RideStartTimeUtc,
-                    RideFinished = s.RideFinished,
+                    KMDriven = (s.RideEndKm - s.RideStartKm).Value,
+                    TimeDriven = (s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Hours + ":" + (s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Minutes + (s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Seconds,
                     User = db.Users.FirstOrDefault(f => f.Id == s.UserID).UserName
                 }).ToList();
 
-
+            var topRides = db.Rides
+                .Where(w => w.RideFinished)
+                .OrderBy(o => (o.RideEndKm - o.RideStartKm).Value)
+                .Take(5)
+                .Select(s => new FinishedRideListItem
+                {
+                    RideID = s.RideID,
+                    KMDriven = (s.RideEndKm - s.RideStartKm).Value,
+                    TimeDriven = (s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Hours + ":" + (s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Minutes + ":" +(s.RideEndTimeUtc - s.RideStartTimeUtc).Value.Seconds,
+                    User = db.Users.FirstOrDefault(f => f.Id == s.UserID).UserName
+                }).ToList();
 
             var viewmodel = new IndexViewModel
             {
+                TopRides = topRides,
                 CurrentRides = currentRides,
                 LastRides = lastRides,
                 Riding = false,
