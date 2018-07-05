@@ -28,7 +28,7 @@ namespace Fiets.ViewModels
 
         public string User { get; set; }
 
-        public DateTime RideStartTimeUtc { get; set; }
+        public DateTime RideStartTime { get; set; }
 
         public int RideStartKm { get; set; }
     }

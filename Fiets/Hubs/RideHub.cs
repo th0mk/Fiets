@@ -6,11 +6,11 @@ using System.Security.Claims;
 
 namespace Fiets.Hubs
 {
-    public class ChatHub : Hub
+    public class RideHub : Hub
     {
         private readonly ApplicationDbContext db;
 
-        public ChatHub(ApplicationDbContext context)
+        public RideHub(ApplicationDbContext context)
         {
             db = context;
         }

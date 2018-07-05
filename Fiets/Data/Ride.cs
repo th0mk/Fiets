@@ -23,8 +23,5 @@ namespace Fiets.Data
         public int? RideEndKm { get; set; }
 
         public DateTime? RideEndTimeUtc { get; set; }
-
-        [ForeignKey("UserID")]
-        public ApplicationUser User { get; set; }
     }
 }

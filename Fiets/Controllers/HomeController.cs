@@ -29,6 +29,7 @@ namespace Fiets.Controllers
                 {
                     RideID = s.RideID,
                     RideStartKm = s.RideStartKm,
+                    RideStartTime = s.RideStartTimeUtc.ToLocalTime(),
                     User = db.Users.FirstOrDefault(f => f.Id == s.UserID).UserName
                 }).ToList();
 

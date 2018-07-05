@@ -5,85 +5,117 @@
 }
 
 
-    <div class="row">
-        <div class="col-6 card">
-            <div class="card-body">
-                <h2 class="card-title">Leaderboard</h2>
-                @if (Model.TopRides != null)
+<div class="row">
+    <div class="col-6 card">
+        <div class="card-body">
+            <h2 class="card-title">Leaderboard</h2>
+            @if (Model.TopRides != null)
+            {
+                foreach (var ride in Model.TopRides)
                 {
-                    foreach (var ride in Model.TopRides)
-                    {
-                        <p>@ride.User</p>
-                        <p>@ride.KMDriven</p>
-                        <p>@ride.TimeDriven</p>
-
-                    }
-                }
-            </div>
-        </div>
-        <div class="col-5 offset-1 card">
-            <div class="card-body">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div id="startRide" class="@if (Model.Riding) {<text>d-none</text>}">
-                        <h4 class="card-title">Track your ride</h4>
-                        <p>Starting KM:</p>
-
-                        <div class="input-group">
-                            <input type="number" id="startkm" />
-                            <div class="input-group-append">
-                                <input type="button" id="startride" value="Send" class="btn btn-outline-primary" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="endRide" class="@if (!Model.Riding) {<text>d-none</text>}">
-                        <h4 class="card-title">End your ride</h4>
-                        <p>End KM:</p>
-                        <div class="input-group">
-                            <input type="number" id="endkm" />
-                            <div class="input-group-append">
-                                <input type="button" id="endride" value="Send" class="btn btn-outline-primary" />
-                            </div>
-                        </div>
-                    </div>
-
+                    <p>@ride.User</p>
+                    <p>@ride.KMDriven</p>
+                    <p>@ride.TimeDriven</p>
 
                 }
-                else
-                {
-                    <h4 class="card-title">Log in to track your rides</h4>
-                }
-                <br />
-                <h4 class="card-title">Huidige ritjes</h4>
-
-
-                <ul id="discussion" class="list-group">
-                    @foreach (var item in Model.CurrentRides)
-                    {
-                        <li><strong>@item.User</strong> @item.RideStartKm</li>
-                    }
-                </ul>
-            </div>
+            }
         </div>
     </div>
+    <div class="col-5 offset-1 card">
+        <div class="card-body">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div id="startRide" class="@if (Model.Riding) {<text>d-none</text>}">
+                    <h4 class="card-title">Track your ride</h4>
+                    <p>Starting KM:</p>
+
+                    <div class="input-group">
+                        <input type="number" id="startRideInput" />
+                        <div class="input-group-append">
+                            <input type="button" id="startRideButton" value="Send" class="btn btn-outline-primary" />
+                        </div>
+                    </div>
+                </div>
+
+                <div id="endRide" class="@if (!Model.Riding) {<text>d-none</text>}">
+                    <h4 class="card-title">End your ride</h4>
+                    <p>End KM:</p>
+                    <div class="input-group">
+                        <input type="number" id="endRideInput" />
+                        <div class="input-group-append">
+                            <input type="button" id="endRideButton" value="Send" class="btn btn-outline-primary" />
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+            else
+            {
+                <h4 class="card-title">Log in to track your rides</h4>
+            }
+            <br />
+            <h4 class="card-title">Huidige ritjes</h4>
+
+
+            <ul id="discussion" class="list-group">
+                @for (int i = 0; i < Model.CurrentRides.Count; i++)
+                {
+                    <li><strong>@Model.CurrentRides[i].User</strong> @Model.CurrentRides[i].RideStartKm - <div id="@Model.CurrentRides[i].RideID"></div></li>
+
+                    @*<script>
+
+                        var StartDateTime@{i;} = new Date(@Model.CurrentRides[i].RideStartTime.Year, @Model.CurrentRides[i].RideStartTime.Month, @Model.CurrentRides[i].RideStartTime.Day, @Model.CurrentRides[i].RideStartTime.Hour, @Model.CurrentRides[i].RideStartTime.Minute, @Model.CurrentRides[i].RideStartTime.Second, @Model.CurrentRides[i].RideStartTime.Millisecond); // YYYY (M-1) D H m s ms (start time and date from DB)
+                        var startStamp = startDateTime.getTime();
+
+                        var newDate = new Date();
+                        var newStamp = newDate.getTime();
+
+                        var timer; // for storing the interval (to stop or pause later if needed)
+
+                        function updateClock() {
+                            newDate = new Date();
+                            newStamp = newDate.getTime();
+                            var diff = Math.round((newStamp - startStamp) / 1000);
+
+                            var d = Math.floor(diff / (24 * 60 * 60));
+                            diff = diff - (d * 24 * 60 * 60);
+                            var h = Math.floor(diff / (60 * 60));
+                            diff = diff - (h * 60 * 60);
+                            var m = Math.floor(diff / (60));
+                            diff = diff - (m * 60);
+                            var s = diff;
+
+                            document.getElementById('@Model.CurrentRides[i].RideID').innerHTML = d + " day(s), " + h + " hour(s), " + m + " minute(s), " + s + " second(s) working";
+                        }
+
+                        timer = setInterval(updateClock, 1000);
+                    </script>*@
+                }
+            </ul>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
-            var startInput = document.getElementById('startkm');
-            var endInput = document.getElementById('endkm');
+
+            var startInput = document.getElementById('startRideInput');
+            var endInput = document.getElementById('endRideInput');
             // Set initial focus to message input box.
-            @if (Model.Riding){
+            @if (User.Identity.IsAuthenticated) {
+            if (Model.Riding) {
                 <text>startInput.focus();</text>
             }
             else
             {
                 <text>endInput.focus();</text>
             }
+            }
             // Start the connection.
             var connection = new signalR.HubConnectionBuilder()
-                .withUrl('/chat')
+                .withUrl('/ride')
                 .build();
             // Create a function that the hub can call to broadcast messages.
             connection.on('addRide', function (id, name, rideStartKm, utcStart) {
@@ -110,24 +142,27 @@
             connection.start()
                 .then(function () {
                     console.log('connection started');
-                    document.getElementById('startride').addEventListener('click', function (event) {
+                    document.getElementById('startRideButton').addEventListener('click', function (event) {
                         connection.invoke('StartRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', startInput.value);
                         $('#endRide').removeClass('d-none');
                         $('#startRide').addClass('d-none');
+                        $('#startRideInput').val('');
                         endInput.focus();
                         event.preventDefault();
+
                     });
-                    document.getElementById('endride').addEventListener('click', function (event) {
+                    document.getElementById('endRideButton').addEventListener('click', function (event) {
                         connection.invoke('EndRide' , '@User.FindFirstValue(ClaimTypes.NameIdentifier)', endInput.value);
                         $('#endRide').addClass('d-none');
                         $('#startRide').removeClass('d-none');
+                        $('#endRideInput').val('');
                         startInput.focus();
                         event.preventDefault();
                     });
                 })
-                .catch(error => {
-                    console.error(error.message);
-                });
+            .catch(error => {
+                console.error(error.message);
+            });
         });
     </script>
 }
